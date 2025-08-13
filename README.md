@@ -99,6 +99,10 @@ TEST_CASES_FIELD=customfield_11600
 GENERATE_TEST_CASES=true
 FETCH_PRS=true
 PREVIEW_MODE=false
+FETCH_PARENT_CONTEXT=true
+FETCH_CONFLUENCE=true
+FETCH_COMMENTS_JIRA=true
+FETCH_ATTACHMENTS_JIRA=true
 ```
 
 ### 2. API Token Setup
@@ -207,7 +211,38 @@ The AI receives comprehensive context for generating test cases:
 - **Change Statistics**: Lines added, removed, total changes
 - **File-specific Details**: Per-file change breakdowns
 
-### 5. **Multi-Repository Support**
+### 5. **Parent/Child Ticket Context** 🔄
+When enabled with `FETCH_PARENT_CONTEXT=true`, the tool provides comprehensive parent-child relationship analysis:
+- **Parent Ticket Details**: Fetches parent ticket description and acceptance criteria using custom fields
+- **Child Issues Discovery**: Dynamically finds all child issues using JQL query `parent = {parent_key}`
+- **Enhanced Context**: Includes parent context and related child issues for better test case generation
+- **Smart Prioritization**: Focuses testing on the current ticket while using parent/child context for comprehensive understanding
+
+### 6. **Confluence Documentation Integration** 📚
+When enabled with `FETCH_CONFLUENCE=true`, the tool automatically discovers and includes broader project documentation:
+- **Explicit Link Fetching**: Extracts and fetches Confluence URLs found in ticket descriptions
+- **Mention Search**: Searches all Confluence spaces for pages mentioning ticket keys (main, parent, and related issues)
+- **Comprehensive Coverage**: Uses Confluence REST API v2 and CQL (Confluence Query Language) for thorough discovery
+- **Project Context**: Includes relevant documentation content in AI test case generation for better understanding
+- **Structured Output**: Saves all Confluence findings to JSON for future reference and analysis
+
+### 7. **Jira Comments Integration** 💬
+When enabled with `FETCH_COMMENTS_JIRA=true`, the tool includes ticket discussion context:
+- **Recent Comments**: Fetches up to 50 most recent comments from the main ticket
+- **Author Information**: Includes comment author names and creation dates
+- **Text Extraction**: Converts Atlassian Document Format (ADF) to readable text
+- **Context Limiting**: Shows only the 10 most recent comments in AI context to avoid overwhelming
+- **Stakeholder Insights**: Provides valuable context from developer discussions and QA feedback
+
+### 8. **Jira Attachments Integration** 📎
+When enabled with `FETCH_ATTACHMENTS_JIRA=true`, the tool includes attachment metadata:
+- **File Details**: Lists all attachments with filenames, sizes, and types
+- **Author Tracking**: Shows who uploaded each attachment and when
+- **Size Formatting**: Human-readable file size display (bytes, KB, MB)
+- **MIME Type Detection**: Identifies file types for better context understanding
+- **Reference Context**: Helps AI understand additional resources available for testing
+
+### 9. **Multi-Repository Support**
 For tickets spanning multiple repositories (like microservices), the tool:
 - Finds PRs across all relevant repositories
 - Selects one PR per repository (lowest ID, non-declined)
